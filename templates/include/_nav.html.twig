@@ -10,31 +10,36 @@
                     <a class="nav-link active" aria-current="page" href="{{ path('show_home') }}">Accueil</a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="#">S'inscrire</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Se connecter</a>
-                </li>
+{#                Exercice : Créer les conditions twig pour afficher les boutons de la nav en fonction de l'état du user.#}
+                {% if not app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">S'inscrire</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Se connecter</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Mon compte</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
+                    </li>
+                {% endif %}
 
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Mon compte</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Se déconnecter</a>
-                </li>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Espace Admin
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Dashboard</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Ajouter un article</a></li>
-                        <li><a class="dropdown-item" href="#">Ajouter une catégorie</a></li>
-                    </ul>
-                </li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Espace Admin
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Ajouter un article</a></li>
+                            <li><a class="dropdown-item" href="#">Ajouter une catégorie</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
 
             </ul>
 {#            <form class="d-flex">#}
