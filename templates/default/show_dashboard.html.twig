@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+    <h1 class="text-center my-3">Tableau de bord</h1>
+
+    {# ################# FLASHES ################# #}
+    <div class="row">
+        <div class="col-6 mx-auto">
+            {% include 'include/_flashes.html.twig' %}
+        </div>
+    </div>
+    {# ################# FLASHES ################# #}
+
+    {# -------------------------------------------------------------------------------------------------- #}
+
+    {# ################# BUTTONS ################# #}
+    <div class="row my-5 mx-auto">
+        <div class="col-4">
+            <a class=" btn btn-sm btn-outline-dark" href="">Ajouter un article</a>
+        </div>
+        <div class="col-4">
+            <a class=" btn btn-sm btn-outline-dark" href="">Ajouter une catégorie</a>
+        </div>
+        <div class="col-4">
+            <a class=" btn btn-sm btn-outline-dark" href="">Voir les archives</a>
+        </div>
+    </div>
+    {# ################# BUTTONS ################# #}
+
+    {# -------------------------------------------------------------------------------------------------- #}
+
+    {# ################# TABLE 1 ################# #}
+    <div class="row">
+        <div class="col-10 mx-auto my-4">
+
+            <h2 class="text-center">Tous les articles</h2>
+
+
+        </div>
+    </div>
+    {# ################# TABLE 1 ################# #}
+
+    {# -------------------------------------------------------------------------------------------------- #}
+
+    <div class="row">
+        {# ################# TABLE 2 ################# #}
+        <div class="col-6">
+
+            <h2 class="text-center">Toutes les catégories</h2>
+
+         {# EXERCICE : Faire une table HTML qui affichera toutes les catégories de la BDD #} 
+
+         <table clas="table">
+
+         <th></th> 
+         <th></th>
+         <th></th>
+         <th></th>
+         <th></th>
+         <th></th>
+        </tr>
+       </thead>
+       <tbody>
+
+       {% for catégorie  %}
+
+          <tr class="text-center">
+
+          <td>{{ categorie.id }}</td> 
+
+
+          
+        </div>
+        {# ################# TABLE 2 ################# #}
+
+    {# -------------------------------------------------------------------------------------------------- #}
+
+        {# ################# TABLE 3 ################# #}
+        <div class="col-6">
+            <h2 class="text-center">Tous les utilisateurs</h2>
+
+           
+        </div>
+        {# ################# TABLE 3 ################# #}
+    </div>
+
+    {# -------------------------------------------------------------------------------------------------- #}
+
+{% endblock %}
