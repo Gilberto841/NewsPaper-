@@ -39,6 +39,15 @@ class CategoryRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAchives()
+    {
+        return $this->createQueryBuilder('c') #SELECT *FROM category
+            ->where( 'c.deletedAt IS NOT NULL') # WHERE delete_at IS NOT NUL 
+            ->getQuery() # Permet de récupérer la requête 
+            ->getResult() # permet de récupérer les résultats de la requête
+            ;
+    }
+
 //    /**
 //     * @return Category[] Returns an array of Category objects
 //     */

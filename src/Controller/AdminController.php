@@ -30,4 +30,12 @@ class AdminController extends AbstractController
             'categories' => $categories
         ]);
     } // end showDashboard()
-} // end class
+
+    #[Route('/voir-les-archives', 'show_archive', ['GET')])]
+    public function showArchives(EntityManagerInterface): Response
+    {
+        return $this->render('admin/show_archive.html.twig, [
+            'categories' => $categories
+        ]);
+   } // end class
+ }
