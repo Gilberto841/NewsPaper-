@@ -19,13 +19,13 @@
     {# ################# BUTTONS ################# #}
     <div class="row my-5 mx-auto">
         <div class="col-2">
-            <a class=" btn btn-sm btn-outline-dark" href="">Ajouter un article</a>
+            <a class="btn btn-sm btn-outline-dark" href="">Ajouter un article</a>
         </div>
         <div class="col-2">
             <a class=" btn btn-sm btn-outline-dark" href="{{ path('create_category') }}">Ajouter une catégorie</a>
         </div>
         <div class="col-2">
-            <a class=" btn btn-sm btn-outline-dark" href="{{ 'admin/show_dashboard}}">Voir les archives</a>
+            <a class="btn btn-sm btn-outline-dark" href="{{ path('show_archive') }}">Voir les archives</a>
         </div>
     </div>
     {# ################# BUTTONS ################# #}
@@ -74,7 +74,7 @@
                             <td>{{ category.createdAt | date('d/m/Y') }}</td>
                             <td>
                                 <a href="{{ path('update_category', {'id': category.id}) }}" class="text-info" title="Modifier la catégorie"><i class="bi bi-pencil-square"></i></a>
-                                <a href="" class="text-danger" title="Archiver la catégorie"><i class="bi bi-trash3"></i></a>
+                                <a href="{{ path('soft_delete_category', {'id': category.id}) }}" class="text-danger" title="Archiver la catégorie"><i class="bi bi-trash3"></i></a>
                             </td>
                         </tr>
 

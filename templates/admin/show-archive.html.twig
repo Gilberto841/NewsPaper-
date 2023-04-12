@@ -28,29 +28,6 @@
 
     {# ################# TABLE 1 ################# #}
     <div class="row">
-
-     <table class="table">
-                <thead>
-                    <tr class="text-center">
-                        <th>#</th>
-                        <th>Nom</th>
-                        <th>Alias</th>
-                        <th>Créée le</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-      {% for category in categories %}
-
-                        <tr class="text-center">
-                            <td>{{ category.id }}</td>
-                            <td>{{ category.name }}</td>
-                            <td>{{ category.alias }}</td>
-                            <td>{{ category.createdAt | date('d/m/Y') }}</td>
-                            <td>
-                                <a href="{{ path('restore_category', {'id': category.id}) }}" class="text-info" title="Restaurer la catégorie"><i class="bi bi-pencil-square"></i></a>
-                                <a href="{{ path('hard_delete_category' {'id'}) }}"  class="text-danger" title="supprimer définitivement"><i class="bi bi-trash3"></i></a>          
         <div class="col-10 mx-auto my-4">
 
             <h2 class="text-center">Tous les articles archivés</h2>
@@ -66,6 +43,36 @@
         <div class="col-6">
 
             <h2 class="text-center">Toutes les catégories archivées</h2>
+
+            <table class="table">
+                <thead>
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th>Alias</th>
+                        <th>Créée le</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                {% for category in categories %}
+
+                    <tr class="text-center">
+                        <td>{{ category.id }}</td>
+                        <td>{{ category.name }}</td>
+                        <td>{{ category.alias }}</td>
+                        <td>{{ category.createdAt | date('d/m/Y') }}</td>
+                        <td>
+                            <a href="{{ path('restore_category', {'id': category.id}) }}" class="text-info" title="Restaurer la catégorie"><i class="bi bi-reply-all-fill"></i></a>
+                            <a href="{{ path('hard_delete_category', {'id': category.id}) }}" class="text-danger" title="Supprimer définitivement la catégorie" onclick="return confirm('Voulez-vous vraiment supprimer définitivement cette catégorie ?')"><i class="bi bi-x-circle"></i></a>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+            </table>
 
         </div>
         {# ################# TABLE 2 ################# #}

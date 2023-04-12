@@ -67,24 +67,37 @@ class CategoryController extends AbstractController
             'form' => $form->createView(),
             'category' => $category
         ]);
-    }
+    } // end update()
 
-    #[Route('/archiver-une-category/{id}', 'solf_delete_category', ['GET'])]
-    public function softDeleteCategory(Category $category, CategoryRepository $repository): Response 
+    #[Route('/archiver-une-category/{id}', name: 'soft_delete_category', methods: ['GET'])]
+    public function softDeleteCategory(Category $category, CategoryRepository $repository): Response
     {
         $category->setDeletedAt(new Datetime());
-        $repository->save($category, true);
-        $this->addFlass('success', "La catégorie". $category->getName() ." a bien été archivé.");
-        return $this->redirectToRoute('show_dashboard');
-    }
 
-     public function hardDeleteCategory(Category $category, CategoryRepository $repository ): Response
-   
-     { 
+        $repository->save($category, true);
+
+        $this->addFlash('success', "La catégorie ". $category->getName() ." a bien été archivé.");
+        return $this->redirectToRoute('show_dashboard');
+    } // end softDelete()
+
+    #[Route('/restaurer-une-categorie/{id}', name: 'restore_category', methods: ['GET'])]
+    public function restoreCategory(Category $category, CategoryRepository $repository): Response
+    {
+        $category->setDeletedAt(null);
+
+        $repository->save($category, true);
+
+        $this->addFlash('success', "La catégorie ". $category->getName() ." a bien été restauré.");
+        return $this->redirectToRoute('show_dashboard');
+    } // end restore()
+
+    #[Route('/supprimer-une-categorie/{id}', name: 'hard_delete_category', methods: ['GET'])]
+    public function hardDeleteCategory(Category $category, CategoryRepository $repository): Response
+    {
         $repository->remove($category, true);
 
-        $this->addFlash( 'success', "La categorie a bien été supprimé définitiment");
-        return $this->redirectToRoute('show_dashbord');
-     }
-     
+        $this->addFlash('success', "La catégorie a bien été supprimé définitivement.");
+        return $this->redirectToRoute('show_dashboard');
+    } // end hardDelete()
+
 } // end class
