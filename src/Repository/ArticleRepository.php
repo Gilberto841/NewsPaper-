@@ -38,7 +38,15 @@ class ArticleRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
+    
+    public function findAllArchived()
+    {
+        return $this->createQueryBuilder('a') # SELECT * FROM category
+            ->where('a.deletedAt IS NOT NULL') # WHERE deleted_at IS NOT NULL
+            ->getQuery() # Permet de récupérer la requête de SQL
+            ->getResult() # PErmet de récupérer les résultats de la requête
+        ;
+    }
 //    /**
 //     * @return Article[] Returns an array of Article objects
 //     */

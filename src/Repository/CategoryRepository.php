@@ -39,13 +39,13 @@ class CategoryRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAchives()
+    public function findAllArchived()
     {
-        return $this->createQueryBuilder('c') #SELECT *FROM category
-            ->where( 'c.deletedAt IS NOT NULL') # WHERE delete_at IS NOT NUL 
-            ->getQuery() # Permet de récupérer la requête 
-            ->getResult() # permet de récupérer les résultats de la requête
-            ;
+        return $this->createQueryBuilder('c') # SELECT * FROM category
+            ->where('c.deletedAt IS NOT NULL') # WHERE deleted_at IS NOT NULL
+            ->getQuery() # Permet de récupérer la requête de SQL
+            ->getResult() # PErmet de récupérer les résultats de la requête
+        ;
     }
 
 //    /**
