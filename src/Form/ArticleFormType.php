@@ -3,9 +3,17 @@
 namespace App\Form;
 
 use App\Entity\Article;
+use App\Entity\Category;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Validator\Constraints\Image;
 
 class ArticleFormType extends AbstractType
 {
@@ -13,26 +21,55 @@ class ArticleFormType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
-                'label' => `titre de l'article`,
+                'label' => "Titre de l'article",
             ])
-                
             ->add('subtitle', TextType::class, [
-                'label' => "sous-titre de l'article"
+                'label' => "Sous-titre de l'article",
             ])
-            ->add('content', TextType::class, [
-                'label' => 'contenu'
+            ->add('content', TextareaType::class, [
+                'label' => "Contenu de l'article",
             ])
             ->add('photo', FileType::class, [
-
+                'label' => "Image d'illustration",
+                'data_class' => null,
+                'mapped' => false,
+                'attr' => [
+                    'class' => $options['photo'] !== null ? $options['photo'] : '',
+                ],
+                'constraints' => [
+                    new Image([
+                        'mimeTypes' => ['image/jpeg', 'image/png'],
+                        'maxSize' => '5M',
+                    ]),
+                ],
             ])
-            ->add('category');
-            
+            ->add('category', EntityType::class, [
+                'label' => "Catégorie de l'article",
+                'class' => Category::class,
+                'choice_label' => 'name',
+                # On utilise le queryBuilder() pour récupérer les catégories qui n'ont pas été softDelete()
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->where('c.deletedAt IS NULL')
+                    ;
+                }
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => $options['photo'] === null ? "Créer l'article" : 'Modifier',
+                'validate' => false,
+                'attr' => [
+                    'class' => "d-block mx-auto my-3 btn btn-outline-dark col-3",
+                ],
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Article::class,
+            'allow_file_upload' => true,
+            'photo' => null,
         ]);
     }
 }

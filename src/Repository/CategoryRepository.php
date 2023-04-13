@@ -39,7 +39,7 @@ class CategoryRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAchives()
+    public function findAllArchived()
     {
         return $this->createQueryBuilder('c') #SELECT *FROM category
             ->where( 'c.deletedAt IS NOT NULL') # WHERE delete_at IS NOT NUL 
