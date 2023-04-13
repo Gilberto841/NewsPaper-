@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un article{% endblock %}
+
+{% block body %}
+
+    {% if article is not defined %}
+        <h1 class="text-center my-3">Ajouter un article</h1>
+    {% else %}
+        <h1 class="text-center my-3">Modifier l'article N°{{ article.id }}</h1>
+    {% endif %}
+
+    <div class="row-">
+        <div class="col-8 mx-auto">
+
+            {{ form_start(form) }}
+
+                {{ form_row(form.title) }}
+                {{ form_row(form.subtitle) }}
+                {{ form_row(form.content) }}
+
+                <div class="row">
+                    <div class="col-6">{{ form_row(form.photo) }}</div>
+                    <div class="col-6">{{ form_row(form.category) }}</div>
+                </div>
+
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+
+{% endblock %}

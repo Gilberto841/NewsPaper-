@@ -4,10 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Entity\Category;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route('/admin')]
@@ -27,10 +28,12 @@ class AdminController extends AbstractController
 
         $categories = $entityManager->getRepository(Category::class)->findBy(['deletedAt' => null]);
         $articles = $entityManager->getRepository(Article::class)->findBy(['deletedAt' => null]);
-        
+        $users = $entityManager->getRepository(User::class)->findBy(['deletedAt' => null]);
+
         return $this->render('admin/show_dashboard.html.twig', [
             'categories' => $categories,
             'articles' => $articles,
+            'users' => $users,
         ]);
     } // end showDashboard()
 

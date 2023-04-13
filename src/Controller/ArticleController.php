@@ -96,13 +96,6 @@ class ArticleController extends AbstractController
             'article' => $article
         ]);
     } // end updateArticle()
-    #[Route('/archiver-un-article/{id}'), 'solf_delete_article', ['GET'])]
-    public function solfDeleteArticle(Article $article, ArticleRepository, ['GET'])]
-        {
-
-        }
-    ]
-
     // ----------------------------------------------------------------------------------
 
 
@@ -141,7 +134,11 @@ class ArticleController extends AbstractController
     #[Route('/supprimer-article/{id}', name: 'hard_delete_article', methods: ['GET'])]
     public function hardDeleteArticle(Article $article, ArticleRepository $repository): Response
     {
+        $photo = $article->getPhoto();
+
         $repository->remove($article, true);
+
+        unlink($this->getParameter('uploads_dir') . DIRECTORY_SEPARATOR . $photo);
 
         $this->addFlash('success', "L'article a bien été supprimé définitivement !");
         return $this->redirectToRoute('show_dashboard');
