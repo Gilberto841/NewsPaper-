@@ -10,53 +10,29 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegisterFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        # EXERCICE : Ajouter des contraintes de validation sur les champs email et password : longueur et de champ vide.
-
         $builder
             ->add('email', EmailType::class, [
-                'label' => 'Choisissez un email',
-                'constraints' => [
-                    new NotBlank(),
-                    new Length([
-                        'min' => 4,
-                        'max' => 255
-                    ])
-                ]
+                'label' => 'E-mail'
             ])
             ->add('password', PasswordType::class, [
-                'label' => 'Choisissez un mot de passe fort',
-                'constraints' => [
-                    new NotBlank(),
-                    new Length([
-                        'min' => 4,
-                        'max' => 255
-                    ])
-                ]
+                'label' => 'Mot de passe'
             ])
             ->add('firstname', TextType::class, [
-                'label' => 'Prénom',
-                'constraints' => [
-                    new NotBlank()
-                ]
+                'label' => 'Prénom'
             ])
             ->add('lastname', TextType::class, [
-                'label' => 'Nom',
-                'constraints' => [
-                    new NotBlank()
-                ]
+                'label' => 'Nom'
             ])
             ->add('submit', SubmitType::class, [
-                'label' => "Je m'inscris",
+                'label' => 'Valider',
                 'validate' => false,
                 'attr' => [
-                    'class' => 'd-block mx-auto my-3 col-4 btn btn-warning'
+                    'class' => 'd-block col-3 my-3 mx-auto btn btn-success'
                 ]
             ])
         ;

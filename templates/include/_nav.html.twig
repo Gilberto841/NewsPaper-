@@ -42,10 +42,12 @@
                 {% endif %}
 
             </ul>
+
 {#            <form class="d-flex">#}
 {#                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">#}
 {#                <button class="btn btn-outline-success" type="submit">Search</button>#}
 {#            </form>#}
+    </form>
         </div>
     </div>
 </nav>
@@ -56,6 +58,8 @@
 
     {#  L'appel de l'action se fera de manière statique (::) et il faudra renseigner le namespace du Controller.
         Vous DEVREZ mettre 2 backslash pour cet appel.
-        
+
         {{ render(controller('App\\Controller\\RenderController::renderCategoriesInNav')) }}
     #}
+
+</div>
