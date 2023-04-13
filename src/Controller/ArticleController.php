@@ -75,9 +75,10 @@ class ArticleController extends AbstractController
             $photo = $form->get('photo')->getData();
 
             if($photo) {
+                # si une nouvelle photo est uploadée, on va supprimer l'ancienne :
                 $this->handleFile($article, $photo, $slugger);
                 unlink($this->getParameter('uploads_dir') . '/' . $currentPhoto);
-                
+
             } else {
                 # Si pas de nouvelle photo, alors on re-set la photo déjà dans la BDD
                 $article->setPhoto($currentPhoto);
@@ -95,6 +96,13 @@ class ArticleController extends AbstractController
             'article' => $article
         ]);
     } // end updateArticle()
+    #[Route('/archiver-un-article/{id}'), 'solf_delete_article', ['GET'])]
+    public function solfDeleteArticle(Article $article, ArticleRepository, ['GET'])]
+        {
+
+        }
+    ]
+
     // ----------------------------------------------------------------------------------
 
 

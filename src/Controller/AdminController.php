@@ -38,9 +38,11 @@ class AdminController extends AbstractController
     public function showArchives(EntityManagerInterface $entityManager): Response
     {
         $categories = $entityManager->getRepository(Category::class)->findAllArchived();
+        $articles = $entityManager->getRepository(Article::class)->findAllArchived();
 
         return $this->render('admin/show_archive.html.twig', [
             'categories' => $categories,
+            'articles' => $articles
         ]);
     }
 
