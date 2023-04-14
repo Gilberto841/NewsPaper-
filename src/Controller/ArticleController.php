@@ -2,30 +2,29 @@
 
 namespace App\Controller;
 
-use DateTime;
 use App\Entity\Article;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
+use DateTime;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 #[Route('/admin')]
 class ArticleController extends AbstractController
 {
-    // --------------------------------- CREATE-ARTICLE ---------------------------------
-    #[Route('/ajouter-article', name: 'create_article', methods: ['GET', 'POST'])]
-    public function createArticle(Request $request, ArticleRepository $repository, SluggerInterface $slugger): Response
+    #[Route('/ajouter-un-article', name: 'create_article', methods: ['GET', 'POST'])]
+    public function createArticle(ArticleRepository $repository, Request $request, SluggerInterface $slugger): Response
     {
         $article = new Article();
 
         $form = $this->createForm(ArticleFormType::class, $article)
             ->handleRequest($request);
-        
+
         if($form->isSubmitted() && $form->isValid()) {
 
             $article->setCreatedAt(new DateTime());
@@ -35,36 +34,36 @@ class ArticleController extends AbstractController
             # Set de la relation entre Article et User
             $article->setAuthor($this->getUser());
 
-            /** @var UploadedFile $photo */ // - pour activer les actions get....
+            /** @var UploadedFile $photo */
             $photo = $form->get('photo')->getData();
 
             if($photo) {
-                $this->handleFile($article, $photo, $slugger);
-            } // end if($photo)
-            
+                $this->handleFile($photo, $article, $slugger);
+            } //end if($photo)
+
             $repository->save($article, true);
 
-            $this->addFlash('success', "L'article a été ajouté avec succès !");
+            $this->addFlash('success', "L'article a bien été créé avec succès !");
             return $this->redirectToRoute('show_dashboard');
         } // end if($form)
 
         return $this->render('admin/article/create.html.twig', [
             'form' => $form->createView()
         ]);
-    } //end createArticle()
-    // ----------------------------------------------------------------------------------
+    } // end create()
 
-
-
-    // --------------------------------- UPDATE-ARTICLE ---------------------------------
-    #[Route('/modifier-article/{id}', name: 'update_article', methods: ['GET', 'POST'])]
-    public function updateArticle(Article $article, Request $request, ArticleRepository $repository, SluggerInterface $slugger): Response
+    #[Route('/modifier-un-article/{id}', name: 'update_article', methods: ['GET', 'POST'])]
+    public function updateArticle(
+        Article $article,
+        Request $request,
+        ArticleRepository $repository,
+        SluggerInterface $slugger
+    ): Response
     {
-        # Récupération de la photo non update
         $currentPhoto = $article->getPhoto();
 
         $form = $this->createForm(ArticleFormType::class, $article, [
-            'photo' => $currentPhoto,
+            'photo' => $currentPhoto
         ])->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
@@ -72,42 +71,33 @@ class ArticleController extends AbstractController
             $article->setUpdatedAt(new DateTime());
             $article->setAlias($slugger->slug($article->getTitle()));
 
+            # Set de la relation entre Article et User
+//            $article->setAuthor($this->getUser());
+
+            /** @var UploadedFile $photo */
             $photo = $form->get('photo')->getData();
 
             if($photo) {
-                # si une nouvelle photo est uploadée, on va supprimer l'ancienne :
-                $this->handleFile($article, $photo, $slugger);
-                unlink($this->getParameter('uploads_dir') . '/' . $currentPhoto);
-
-            } else {
-                # Si pas de nouvelle photo, alors on re-set la photo déjà dans la BDD
+                $this->handleFile($photo, $article, $slugger);
+                # Si une nouvelle photo est uploadé, on va supprimer l'ancienne :
+                unlink($this->getParameter('uploads_dir') . DIRECTORY_SEPARATOR . $currentPhoto);
+            }
+            else {
                 $article->setPhoto($currentPhoto);
-            } // end if($newPhoto)
+            } //end if($photo)
 
             $repository->save($article, true);
 
-            $this->addFlash('success',"La modification a bien été enregistrée.");
+            $this->addFlash('success', "L'article a bien été modifié avec succès !");
             return $this->redirectToRoute('show_dashboard');
-
         } // end if($form)
 
         return $this->render('admin/article/create.html.twig', [
             'form' => $form->createView(),
             'article' => $article
         ]);
-    } // end updateArticle()
-    #[Route('/archiver-un-article/{id}'), 'solf_delete_article', ['GET'])]
-    public function solfDeleteArticle(Article $article, ArticleRepository, ['GET'])]
-        {
+    } // end update()
 
-        }
-    ]
-
-    // ----------------------------------------------------------------------------------
-
-
-
-    // ------------------------------ SOFT-DELETE-ARTICLE -------------------------------
     #[Route('/archiver-un-article/{id}', name: 'soft_delete_article', methods: ['GET'])]
     public function softDeleteArticle(Article $article, ArticleRepository $repository): Response
     {
@@ -115,69 +105,48 @@ class ArticleController extends AbstractController
 
         $repository->save($article, true);
 
-        $this->addFlash('success', "L'article a bien été archivé !");
+        $this->addFlash('success', "L'article a bien été archivé avec succès !");
         return $this->redirectToRoute('show_dashboard');
-    } // end softDeleteArticle()
-    // ----------------------------------------------------------------------------------
+    } // end softDelete()
 
-
-
-    // -------------------------------- RESTORE-ARTICLE ---------------------------------
-    #[Route('/restaurer-article/{id}', name: 'restore_article', methods: ['GET'])]
+    #[Route('/restaurer-un-article/{id}', name: 'restore_article', methods: ['GET'])]
     public function restoreArticle(Article $article, ArticleRepository $repository): Response
     {
         $article->setDeletedAt(null);
 
         $repository->save($article, true);
 
-        $this->addFlash('success', "L'article a bien été restauré !");
+        $this->addFlash('success', "L'article a bien été restauré avec succès !");
         return $this->redirectToRoute('show_dashboard');
-    } // end restoreArticle()
-    // ----------------------------------------------------------------------------------
+    } // end restore()
 
-
-
-    // ------------------------------ HARD-DELETE-ARTICLE -------------------------------
-    #[Route('/supprimer-article/{id}', name: 'hard_delete_article', methods: ['GET'])]
+    #[Route('/supprimer-un-article/{id}', name: 'hard_delete_article', methods: ['GET'])]
     public function hardDeleteArticle(Article $article, ArticleRepository $repository): Response
     {
+        $photo = $article->getPhoto();
+
         $repository->remove($article, true);
 
-        $this->addFlash('success', "L'article a bien été supprimé définitivement !");
+        unlink($this->getParameter('uploads_dir') . DIRECTORY_SEPARATOR . $photo);
+
+        $this->addFlash('success', "L'article a bien été supprimé définitivement de la base.");
         return $this->redirectToRoute('show_dashboard');
-    } // end hardDeleteArticle()
-    // ----------------------------------------------------------------------------------
-
-
-    # -------------------------------------- PRIVATE FUNCTIONS ----------------------------------------------
-private function handleFile(Article $article, UploadedFile $photo, SluggerInterface $slugger)
-{
-    # 1 - Déconstruire le nom du fichier
-    # a : Variabiliser l'extension du fichier
-    $extension = '.' . $photo->guessExtension() ;
-
-    # 2 - Assainir le nom du fichier (càd, retirer les accents et les espaces blancs)
-    $safeFilename = $slugger->slug(pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME));
-
-    # 3 - Rendre le nom du fichier unique
-    # a : Reconstruire le nom du fichier
-    $newFilename = $safeFilename . '_' . uniqid("", true) . $extension;
-
-    # 4 - Déplacer le fichier (upload dans notre application Symfony)
-    # On utilise le try/catch lorsqu'une méthode lance (throw) une Exception (erreur)
-    try {
-        # On a défini un paramètre dans config/service.yaml qui est le chemin (absolu) du dossier 'uploads'
-        # On récupère la valeur (le paramètre) avec getParameter() et le nom du param défini dans le fichier service.yaml.
-        $photo->move($this->getParameter('uploads_dir'), $newFilename);
-        # Si tout s'est bien passé (aucune Exception lancée) alors on doit set le nom de la photo en BDD
-        $article->setPhoto($newFilename);
     }
-    catch(FileException $exception) {
-        $this->addFlash('warning', "Le fichier ne s'est pas importé correctement. Veuillez réessayer." . $exception->getMessage());
-    } // end catch()
-} // end handleFile()
-# -------------------------------------- PRIVATE FUNCTIONS FIN -------------------------------------------
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    private function handleFile(UploadedFile $photo, Article $article, SluggerInterface $slugger)
+    {
+        $extension = '.' . $photo->guessExtension();
+        $safeFilename = $slugger->slug(pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME));
 
+        $newFilename = $safeFilename . '_' . uniqid() . $extension;
 
-} // end of ArticleController{}
+        try {
+            $photo->move($this->getParameter('uploads_dir'), $newFilename);
+            $article->setPhoto($newFilename);
+        } catch (FileException $exception) {
+            // code à exécuter en cas d'erreur
+        }
+    } // end handleFile()
+
+} // end class
