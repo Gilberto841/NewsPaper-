@@ -32,6 +32,48 @@
 
             <h2 class="text-center">Tous les articles archivés</h2>
 
+            <table class="table">
+
+                <thead>
+                <tr class="text-center">
+                    <th>#</th>
+                    <th>Titre</th>
+                    <th>Catégorie</th>
+                    <th>Photo</th>
+                    <th>Auteur</th>
+                    <th>Commenté</th>
+                    <th>Créé le</th>
+                    <th>Modifié le</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for article in articles %}
+
+                    <tr class="text-center align-middle">
+
+                        <td>{{ article.id }}</td>
+                        <td>{{ article.title | length > 20 ? article.title | slice(0,20) ~ '...' : article.title }}</td>
+                        <td>{{ article.category.name }}</td>
+                        <td><img width="150" height="150" class="img-fluid" src="{{ asset('uploads/' ~ article.photo) }}" alt="{{ article.title }}"></td>
+                        <td>{{ article.author.fullname }}</td>
+                        <td>{{ article.commentaries is empty ? 'Non' : 'Oui' }}</td>
+                        <td>{{ article.createdAt | date('d/m/Y') }}</td>
+                        <td>{{ article.deletedAt | date('d/m/Y') }}</td>
+                        <td>
+                            <a href="{{ path('restore_article', {'id': article.id}) }}" class="btn btn-sm btn-info" title="Modifier"><i class="bi bi-reply-all-fill"></i></a>
+                            <a href="{{ path('hard_delete_article', {'id': article.id}) }}" onclick="return confirm('Voulez-vous vraiment supprimer définitivement cet article ?')" class="btn btn-sm btn-danger" title="Archiver"><i class="bi bi-x-circle"></i></a>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+
         </div>
     </div>
     {# ################# TABLE 1 ################# #}

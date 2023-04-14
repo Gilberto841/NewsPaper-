@@ -1,8 +1,8 @@
-<div class="row">
+<div class="row border-top border-warning pt-3">
     <p class="d-flex justify-content-around">
 
         {% for category in categories %}
-            <a href="#" class="text-decoration-none item-hover">{{ category.name | capitalize }}</a>
+            <a href="{{ path('show_articles_from_cat', {'alias': category.alias}) }}" class="text-decoration-none item-hover text-dark">{{ category.name | capitalize }}</a>
         {% endfor %}
     </p>
 </div>

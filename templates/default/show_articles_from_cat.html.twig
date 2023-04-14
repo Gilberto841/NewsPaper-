@@ -1,11 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil | Newspaper{% endblock %}
-
+{% block title %}Articles de la catégorie {{ category.name }}{% endblock %}
 
 {% block body %}
 
-    <h1 class="text-center my-4">Articles à la Une</h1>
+    <h1 class="text-center my-4">Catégorie {{ category.name }} </h1>
 
     <div class="row">
         <div class="col-10 mx-auto">
@@ -34,5 +33,6 @@
 
         </div>
     </div>
+
 {% endblock %}
 
